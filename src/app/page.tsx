@@ -1,8 +1,11 @@
 "use client";
+import { useState } from "react";
 import { Plus, Search } from "lucide-react";
 import Shelf from "@/app/components/Shelf";
+import SearchModal from "@/app/components/SearchModal";
 
 export default function BookshelfPage() {
+  const [isSearchOpen, setIsSearchOpen] = useState(false); // 3. Estado del modal
   return (
     <main className="min-h-screen bg-[#F5F1E3] p-8 md:p-16">
       <header className="flex justify-between items-center max-w-4xl mx-auto mb-16">
@@ -11,7 +14,10 @@ export default function BookshelfPage() {
         </h1>
         
         <div className="flex gap-4">
-          <button className="p-2 rounded-lg bg-stone-200/50 hover:bg-stone-200 transition-colors">
+         <button 
+            onClick={() => setIsSearchOpen(true)}
+            className="p-2 rounded-lg bg-stone-200/50 hover:bg-stone-200 transition-colors"
+          >
             <Search className="w-5 h-5 text-[#4A3728]" />
           </button>
           <button className="p-2 rounded-lg bg-stone-200/50 hover:bg-stone-200 transition-colors">
@@ -29,6 +35,11 @@ export default function BookshelfPage() {
           <Shelf title="TO READ" />
         </section>
       </div>
+      {/*. Renderizar el Modal*/}
+      <SearchModal
+        isOpen={isSearchOpen}
+        onClose={()=>setIsSearchOpen(false)}/>
+        
     </main>
   );
 }
