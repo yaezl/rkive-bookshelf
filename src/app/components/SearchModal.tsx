@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Search, Loader2 } from "lucide-react";
 import { GoogleBook } from "@/app/types";
+import AddBookModal from "@/app/components/AddBookModal";
 
 // Caché simple en memoria (vive mientras la app está abierta)
 const searchCache = new Map<string, GoogleBook[]>();
@@ -18,6 +19,7 @@ export default function SearchModal({
   const [results, setResults] = useState<GoogleBook[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedBook, setSelectedBook] = useState<GoogleBook | null>(null);
 
   // Ref para cancelar el fetch anterior si el usuario sigue escribiendo
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -147,6 +149,7 @@ export default function SearchModal({
                 results.map((book) => (
                   <div
                     key={book.id}
+                    onClick={() => setSelectedBook(book)}
                     className="flex gap-4 p-3 hover:bg-stone-100 rounded-xl transition-all cursor-pointer group"
                   >
                     <div className="w-14 h-20 bg-stone-200 rounded shadow-sm overflow-hidden flex-shrink-0">
@@ -183,6 +186,10 @@ export default function SearchModal({
                 </p>
               )}
             </div>
+            <AddBookModal
+              book={selectedBook}
+               onClose={() => setSelectedBook(null)}
+            />
           </motion.div>
         </motion.div>
       )}
