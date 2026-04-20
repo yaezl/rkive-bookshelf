@@ -1,7 +1,10 @@
 "use client";
 import { motion } from "framer-motion";
-import { ShelfProps } from "@/app/types";
+import { ShelfProps, GoogleBook} from "@/app/types";
 import { useBookshelf } from "@/app/context/BookshelfContext";
+import { useState } from "react";
+
+import BookDetailsModal from "./BookDetailsModal";
 
 // Colores para lomos sin portada
 const SPINE_COLORS = [
@@ -22,6 +25,7 @@ function getSpineColor(title: string) {
 
 export default function Shelf({ title }: ShelfProps) {
   const { shelves } = useBookshelf();
+  const [selectedBook, setSelectedBook] = useState<GoogleBook | null>(null);
   const books = shelves[title];
 
   const verticalBooks = books.filter((b) => b.orientation === "vertical");
@@ -57,6 +61,7 @@ export default function Shelf({ title }: ShelfProps) {
                   key={book.id + i}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
+                   onClick={() => setSelectedBook(book)}
                   className="relative flex-shrink-0 w-6 sm:w-8 h-20 sm:h-28 rounded-sm shadow-md border-l border-white/10 overflow-hidden cursor-pointer hover:-translate-y-2 transition-transform group"
                 >
                   {thumbnail ? (
@@ -87,6 +92,7 @@ export default function Shelf({ title }: ShelfProps) {
                     key={book.id + i}
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
+                    onClick={() => setSelectedBook(book)}
                     className="relative flex-shrink-0 h-5 sm:h-7 rounded-sm shadow-md overflow-hidden cursor-pointer hover:translate-x-2 transition-transform group border-t border-white/10 w-[80px] sm:w-[112px]"
                   >
                     {thumbnail ? (
@@ -117,6 +123,12 @@ export default function Shelf({ title }: ShelfProps) {
         <div className="h-4 w-full bg-[#D2B48C] rounded-sm shadow-md border-b border-black/10" />
         <div className="h-6 w-full bg-black/5 blur-md absolute -bottom-6 left-0" />
       </div>
+      <BookDetailsModal 
+        book={selectedBook} 
+        category={title}
+        onClose={() => setSelectedBook(null)} 
+      />
     </motion.div>
   );
 }
+

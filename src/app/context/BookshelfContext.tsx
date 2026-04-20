@@ -11,7 +11,12 @@ export interface ShelfBook {
 
 interface BookshelfState {
   shelves: Record<ShelfCategory, ShelfBook[]>;
-  addBook: (category: ShelfCategory, book: GoogleBook, orientation: BookOrientation) => void;
+  addBook: (
+    category: ShelfCategory,
+    book: GoogleBook,
+    orientation: BookOrientation,
+  ) => void;
+  removeBook: (category: ShelfCategory, bookId: string) => void;
   canAdd: (category: ShelfCategory, orientation: BookOrientation) => boolean;
 }
 
@@ -20,20 +25,26 @@ const BookshelfContext = createContext<BookshelfState | null>(null);
 export function BookshelfProvider({ children }: { children: ReactNode }) {
   const [shelves, setShelves] = useState<Record<ShelfCategory, ShelfBook[]>>({
     "CURRENTLY READING": [],
-    "FAVORITES": [],
+    FAVORITES: [],
     "TO READ": [],
   });
 
   const canAdd = (category: ShelfCategory, orientation: BookOrientation) => {
     const shelf = shelves[category];
     const verticals = shelf.filter((b) => b.orientation === "vertical").length;
-    const horizontals = shelf.filter((b) => b.orientation === "horizontal").length;
+    const horizontals = shelf.filter(
+      (b) => b.orientation === "horizontal",
+    ).length;
     if (orientation === "vertical") return verticals < 5;
     if (orientation === "horizontal") return horizontals < 3;
     return false;
   };
 
-  const addBook = (category: ShelfCategory, book: GoogleBook, orientation: BookOrientation) => {
+  const addBook = (
+    category: ShelfCategory,
+    book: GoogleBook,
+    orientation: BookOrientation,
+  ) => {
     if (!canAdd(category, orientation)) return;
     setShelves((prev) => ({
       ...prev,
@@ -41,8 +52,15 @@ export function BookshelfProvider({ children }: { children: ReactNode }) {
     }));
   };
 
+  const removeBook = (category: ShelfCategory, bookId: string) => {
+    setShelves((prev) => ({
+      ...prev,
+      [category]: prev[category].filter((item) => item.book.id !== bookId),
+    }));
+  };
+
   return (
-    <BookshelfContext.Provider value={{ shelves, addBook, canAdd }}>
+    <BookshelfContext.Provider value={{ shelves, addBook, removeBook, canAdd }}>
       {children}
     </BookshelfContext.Provider>
   );
@@ -50,6 +68,7 @@ export function BookshelfProvider({ children }: { children: ReactNode }) {
 
 export function useBookshelf() {
   const ctx = useContext(BookshelfContext);
-  if (!ctx) throw new Error("useBookshelf debe usarse dentro de BookshelfProvider");
+  if (!ctx)
+    throw new Error("useBookshelf debe usarse dentro de BookshelfProvider");
   return ctx;
 }
