@@ -2,26 +2,34 @@
 
 @layer base {
   body {
-    /* Fondo crema con textura de papel/pared */
-    background-color: #F5F1E3;
-    background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png");
-    color: #4A3728;
-  }
+  background-color: #F5F1E3;
+  background-image: 
+    url("https://www.transparenttextures.com/patterns/paper-fibers.png"),
+    radial-gradient(circle at center, rgba(0,0,0,0.08) 0%, transparent 70%);
+  color: #b39d8c;
+}
 }
 
 @layer components {
-  .madera-textura {
-    background-color: #D2B48C;
-    background-image: url("https://www.transparenttextures.com/patterns/wood-pattern.png");
-  }
+ .madera-textura {
+  background-color: #eccfcc;
+  background-image: 
+    url("https://www.transparenttextures.com/patterns/wood-pattern.png"),
+    linear-gradient(to bottom, #bdb5af, #35291e);
+  background-blend-mode: multiply;
+}
   
   .fondo-estante-oscuro {
-    background-color: #1a1a1a;
-    background-image: url("https://www.transparenttextures.com/patterns/stardust.png"); /* Efecto purpurina */
-  }
+  background-color: #d3caae;
+  background-image: 
+    url("https://www.transparenttextures.com/patterns/asfalt-dark.png");
+  box-shadow: inset 0 0 40px rgba(145, 98, 98, 0.8);
+}
 
-  .borde-dorado {
-    border: 1px solid #D4AF37;
-    box-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
-  }
+.borde-dorado {
+  border: 1px solid #f0eeea;
+  box-shadow: 
+    0 0 6px rgba(233, 206, 185, 0.5),
+    inset 0 0 3px rgba(235, 170, 116, 0.4);
+}
 }
